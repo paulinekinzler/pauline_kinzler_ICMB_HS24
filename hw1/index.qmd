@@ -9,6 +9,3 @@ Here is the free form text for assignment 1.
 x <- rnorm(10000, mean = 100, sd = 15)
 hist(x)
 ```
-
-
-

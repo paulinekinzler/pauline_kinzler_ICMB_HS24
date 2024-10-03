@@ -1,0 +1,10 @@
+---
+title: "Assignment 2"
+author: "Pauline Kinzler"
+---
+
+my thoughts as text;)
+
+```{r}
+
+```

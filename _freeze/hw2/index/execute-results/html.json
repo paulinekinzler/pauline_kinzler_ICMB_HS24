@@ -1,0 +1,15 @@
+{
+  "hash": "2047b74c200015e1bcc73401c1f2ada4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Assignment 2\"\nauthor: \"Pauline Kinzler\"\n---\n\n\n\n\nmy thoughts as text;)\n\n\n\n\n::: {.cell}\n\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
