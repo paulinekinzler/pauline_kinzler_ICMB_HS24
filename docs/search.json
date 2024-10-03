@@ -22,13 +22,6 @@
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\nCode1 + 1\n\n[1] 2\n\n\n\n\n\n\n\n Back to top"
-  },
-  {
     "objectID": "hw2/index.html",
     "href": "hw2/index.html",
     "title": "Assignment 2",
@@ -38,5 +31,12 @@
       "About",
       "Assignment 2"
     ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\nCode1 + 1\n\n[1] 2\n\n\n\n\n\n\n\n Back to top"
   }
 ]
