@@ -3,8 +3,127 @@ title: "Assignment 2"
 author: "Pauline Kinzler"
 ---
 
-my thoughts as text;)
+Questions:
+
+1.  for this assignment, which part of the simulation do we have to replicate
+2.  what's the difference between commit and push?
+3.  
 
 ```{r}
+##Anfangsdefinitionen
+N  <- 5000  # Größe der Population
+MU <- 100   # Mittelwert der Population
 
+# Population mit Normalverteilung erstellen
+population <- rnorm(N, mean=MU, sd=MU/5)
+
+# Optional: Einen Blick auf die ersten paar Werte werfen
+head(population)
+```
+
+```{r}
+##Gini-Koeffizient
+gini <- function(y) {
+  # Berechne den Gini-Koeffizienten für die Bevölkerung y
+  y <- sort(y)  # Sortiere die Werte in aufsteigender Reihenfolge
+  n <- length(y)  # Anzahl der Werte
+  
+  numer <- 2 * sum((1:n) * y)  # Zähler
+  denom <- n * sum(y)  # Nenner
+  
+  return ((numer / denom) - (n + 1) / n)  # Gini-Koeffizient
+}
+```
+
+```{r}
+##Ausgabe des Gini-Werts für meine Population
+gini_value <- gini(population)
+
+# Ausgabe des Gini-Koeffizienten
+gini_value
+```
+
+```{r}
+##Histogramm erstellen
+# Erforderliche Bibliothek laden
+library(ggplot2)
+
+# Funktion zur Berechnung des Gini-Koeffizienten
+gini <- function(y) {
+  y <- sort(y)
+  n <- length(y)
+  numer <- 2 * sum((1:n) * y)
+  denom <- n * sum(y)
+  return ((numer / denom) - (n + 1) / n)
+}
+
+# Funktion zur Erstellung des Histogramms
+hist_custom <- function(population, label="pop", bins=30) {
+  # Berechne den Gini-Koeffizienten
+  gini_value <- round(gini(population), 2)
+  
+  # Füge den Gini-Koeffizienten zur Beschriftung hinzu
+  label <- paste(label, ": G=", gini_value, sep="")
+  
+  # Erstelle das Histogramm mit ggplot2
+  ggplot(data.frame(population), aes(x=population)) +
+    geom_histogram(bins=bins, fill="blue", alpha=0.5) +
+    labs(x="wealth", y="count", title=label) +
+    theme_minimal() +
+    theme(plot.title = element_text(hjust=0.5)) +  # Zentriere den Titel
+    scale_x_continuous() +
+    scale_y_continuous()
+}
+
+# Beispielaufruf
+set.seed(123)
+N <- 5000
+MU <- 100
+population <- rnorm(N, mean=MU, sd=MU/5)
+
+# Histogramm plotten
+hist_custom(population, label="Population")
+
+```
+
+```{r}
+##Transaction
+random_split <- function(A, B) {
+  # Nimm das gesamte Geld im Pot
+  pot <- A + B
+  
+  # Teile es zufällig auf
+  share <- runif(1, min = 0, max = pot)
+  
+  # Rückgabe des Anteils und des verbleibenden Geldes
+  return(c(share, pot - share))
+}
+
+# Beispielaufruf der Funktion
+A <- 100
+B <- 200
+result <- random_split(A, B)
+
+# Ausgabe des Ergebnisses
+cat("Actor 1 gets:", result[1], "\n")
+cat("Actor 2 gets:", result[2], "\n")
+```
+
+```{r}
+##Interaction
+anyone <- function(N) {
+  # Wählt zufällig zwei eindeutige Werte aus dem Bereich 0 bis N-1
+  return(sample(0:(N - 1), 2))
+}
+
+# Beispielaufruf der Funktion
+N <- 10
+result <- anyone(N)
+
+# Ausgabe des Ergebnisses
+cat("Randomly selected values:", result[1], "and", result[2], "\n")
+```
+
+```{r}
+##Simulation
 ```
