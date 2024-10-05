@@ -5,9 +5,9 @@ author: "Pauline Kinzler"
 
 Questions:
 
-1.  for this assignment, which part of the simulation do we have to replicate
-2.  what's the difference between commit and push?
-3.  
+1.  What would be the smartest solution to share the code for my master’s thesis? Do the same thing? (new project, quarto, github etc. leading to a website and share the website)
+
+At first I am defining the population we have in the beginning:
 
 ```{r}
 ##Anfangsdefinitionen
@@ -20,6 +20,8 @@ population <- rnorm(N, mean=MU, sd=MU/5)
 # Optional: Einen Blick auf die ersten paar Werte werfen
 head(population)
 ```
+
+Now I'm creating the Gini-coefficient:
 
 ```{r}
 ##Gini-Koeffizient
@@ -35,6 +37,8 @@ gini <- function(y) {
 }
 ```
 
+Then I want to know what the Gini-coefficient of my current population is:
+
 ```{r}
 ##Ausgabe des Gini-Werts für meine Population
 gini_value <- gini(population)
@@ -42,6 +46,8 @@ gini_value <- gini(population)
 # Ausgabe des Gini-Koeffizienten
 gini_value
 ```
+
+Now I'm plotting a histogram with the wealth on the x-axis and the number of people on the y-axis.
 
 ```{r}
 ##Histogramm erstellen
@@ -86,6 +92,8 @@ hist_custom(population, label="Population")
 
 ```
 
+now I'm defining the way a transaction works or what happens when two people meet:
+
 ```{r}
 ##Transaction
 random_split <- function(A, B) {
@@ -109,6 +117,8 @@ cat("Actor 1 gets:", result[1], "\n")
 cat("Actor 2 gets:", result[2], "\n")
 ```
 
+now I'm defining how the interaction works, how two people are chosen to meet up:
+
 ```{r}
 ##Interaction
 anyone <- function(N) {
@@ -116,14 +126,143 @@ anyone <- function(N) {
   return(sample(0:(N - 1), 2))
 }
 
-# Beispielaufruf der Funktion
-N <- 10
+# Beispielaufruf der Funktion. N wurde oben schon definiert
+
 result <- anyone(N)
 
 # Ausgabe des Ergebnisses
 cat("Randomly selected values:", result[1], "and", result[2], "\n")
 ```
 
+Now I'm replicating the simulation:
+
 ```{r}
 ##Simulation
+step <- function(population, transaction = random_split, interaction = anyone) {
+  # Wählt zwei zufällige Akteure aus
+  indices <- interaction(length(population))
+  i <- indices[1]
+  j <- indices[2]
+  
+  # Modifiziere die Bevölkerung durch eine Transaktion
+  population[c(i, j)] <- transaction(population[i], population[j])
+  
+  # Rückgabe der modifizierten Population
+  return(population)
+}
+
+```
+
+```{r}
+simulate <- function(population, T, transaction = random_split, interaction = anyone) {
+  # Kopiere die Population, um Änderungen daran vorzunehmen
+  population <- population
+  
+  # Erster Zeitschritt: Ausgabe der anfänglichen Population
+  result <- list()
+  result[[1]] <- population
+  
+  # Simuliere T Transaktionen
+  for (t in 1:T) {
+    population <- step(population, transaction, interaction)
+    result[[t + 1]] <- population
+  }
+  
+  return(result)
+}
+
+```
+
+```{r}
+# Beispiel: population, random_split, anyone müssen definiert sein. und N und population auch
+
+
+# Simulation mit T = 5 Schritten
+result <- simulate(population, T = 5)
+
+# Ausgabe der Population nach jedem Schritt
+for (t in 1:length(result)) {
+  cat("Zeitpunkt", t - 1, ":", result[[t]], "\n")
+}
+
+```
+
+Now I'm replicating the visualization: That didn't work, it didn't show me any plots. I tried several alternatives, but one of them caused never ending error messages and made my laptop sweat and breathe very heavily so I got scared and stopped trying.
+
+```{r}
+library(ggplot2)     # Für die Plots
+library(dplyr)       # Für Datenmanipulation
+library(gridExtra)   # Für mehrere Plots nebeneinander
+
+show <- function(population, k=40, percentiles=c(1, 10, 50, 90, 99), ...) {
+  N <- length(population)
+  start <- sort(population)  # Anfangspopulation sortieren
+  
+  # Simulationsresultate aufzeichnen
+  results <- lapply(0:(k * N), function(t) {
+    if (t %% (N / 10) == 0) {
+      list(t=t, pop=sort(simulate(population, T=k*N, ...)[[t+1]]))
+    }
+  }) %>% Filter(Negate(is.null), .)
+  
+  # Ausgabe der Statistiken
+  cat(sprintf("   t    Gini  stdev %s\n", paste(sprintf("%3d%%", percentiles), collapse=" ")))
+  cat(sprintf("------- ----  ----- %s\n", paste(rep("----", length(percentiles)), collapse=" ")))
+  
+  fmt <- "%7d %.2f  %.1f  %s\n"
+  
+  for (result in results) {
+    t <- result$t
+    pop <- result$pop
+    if (t %% (k * N %/% 10) == 0) {
+      data <- sapply(percentiles, function(pct) percent(pct, pop))
+      cat(sprintf(fmt, t, gini(pop), sd(pop), paste(data, collapse=" ")))
+    }
+  }
+
+  # Erstellung der Plots:
+  
+  # Prozentil-Plot
+  times <- sapply(results, function(result) result$t)
+  
+  percentile_plot <- ggplot() +
+    labs(title=paste(percentiles, collapse="/"), x="time", y="wealth") +
+    theme_minimal() +
+    lapply(percentiles, function(pct) {
+      line <- sapply(results, function(result) percent(pct, result$pop))
+      geom_line(aes(x=times, y=line, color=factor(pct)))
+    }) +
+    scale_color_discrete(name="Percentiles")
+
+  # Histogramme
+  hist_data <- data.frame(
+    value=c(start, population),
+    type=rep(c("start", "end"), each=N)
+  )
+  
+  hist_plot <- ggplot(hist_data, aes(x=value, fill=type)) +
+    geom_histogram(position="identity", alpha=0.5, bins=30) +
+    labs(title="Histogram", x="wealth", y="count") +
+    theme_minimal()
+
+  # Geordnete Kurven
+  ordered_data <- data.frame(
+    order=1:N,
+    start=sort(start),
+    end=sort(population)
+  )
+  
+  ordered_plot <- ggplot(ordered_data, aes(x=start, y=order)) +
+    geom_line(aes(color="start")) +
+    geom_line(aes(x=end, y=order, color="end")) +
+    labs(title="Ordered Curves", x="wealth", y="order") +
+    scale_color_manual(values=c("start"="blue", "end"="red")) +
+    theme_minimal()
+
+  # Plots anzeigen
+  print(percentile_plot)
+  print(hist_plot)
+  print(ordered_plot)
+}
+
 ```
