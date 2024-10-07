@@ -7,6 +7,8 @@ Questions:
 
 1.  What would be the smartest solution to share the code for my master’s thesis? Do the same thing? (new project, quarto, github etc. leading to a website and share the website)
 
+First of all: I used ChatGPT for this assignment. I used it to translate the python code to R-codes, to explain to me the steps of the codes and to provide me with assistance and alternatives in case of errors.
+
 At first I am defining the population we have in the beginning:
 
 ```{r}
