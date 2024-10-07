@@ -2,7 +2,7 @@
   "hash": "8343c7c28d430a799dc5466cf5830daa",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: \"Assignment 1\"\nauthor: \"Pauline Kinzler\"\n---\n\n\n\n\nHere is the free form text for assignment 1.\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nx <- rnorm(10000, mean = 100, sd = 15)\nhist(x)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n",
+    "markdown": "---\ntitle: \"Assignment 1\"\nauthor: \"Pauline Kinzler\"\n---\n\n\n\nHere is the free form text for assignment 1.\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nx <- rnorm(10000, mean = 100, sd = 15)\nhist(x)\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"
