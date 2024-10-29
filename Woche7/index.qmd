@@ -1,0 +1,77 @@
+---
+title: "week7"
+author: "Pauline Kinzler"
+---
+
+```{r}
+#make a model
+
+x <- c(1,3,4,8)
+mean(x)
+A <- 3
+f <- 2
+phi <- 0.5
+A * cos(f*x + phi)
+
+time <- seq(0, 5, 0.1)
+y <- A * cos(f*time + phi)
+
+plot(time, y)
+
+
+#calculate the root mean squared error. mood is the data we're trying to measure (on the y-axis)
+mean((mood-y)^2)
+
+
+
+#recipe, we haven't put in any ingredients yet. define the function. what the function will do.
+general_cos <- function(t, amplitude, freq, phase) {
+  output <- amplitude * cos(freq * t + phase)
+  return(output) #we don't need to say return explicitely
+}
+
+
+#coding the function
+predictions <- general_cos(t = time, amplitude = 3, freq = 2, phase = 0)
+
+general_cos(time, amplitude = 1, freq = 1, phase = 1)
+
+rmse <- function(observations, predictions) {
+  sqrt(mean((observations-predictions)^2))
+}
+
+
+#combine both
+model1_error <- function(params, time, data) {
+  predictions <- general_cos(time, amplitude = params[1], freq = params[2], phase = params[3])
+  return(rmse(data, predictions))
+}
+
+
+
+model1_error(c(2, 3, 1), time, data = mood)
+
+
+
+candidates <- list(
+  c(1,3,5),
+  c(1,2,8),
+  c(0.2,0.5,9)
+)
+
+model1_error(candidates[[1]], time, data = mood)
+
+for (i in 1:length(candidates)) {
+  print(model1_error(candidates[[1]], time, data = mood))
+}
+
+#assignment, simplex im Buch
+optim(par = c(1,1,0), fn = model1_error, time = time, data = mood)
+?optim
+
+
+#starting values, parameters(?), additional arguments
+
+#outputs:
+##value: Fehler
+```
