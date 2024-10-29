@@ -69,9 +69,24 @@ for (i in 1:length(candidates)) {
 optim(par = c(1,1,0), fn = model1_error, time = time, data = mood)
 ?optim
 
+fit_results <- optim(par = c(1,1,0), fn = model1_error, time = time, data = mood)
+
+fit_results$par
+
+predictions_from_best_par <- general_cos(t = time, amplitude = p1[1], freq = p1[2], phase = p1[3])
+
+plot(time, mood)
+lines(time, predictions_from_best_par, col = "red")
+
+
+#if we run this, we expect a sinus wave that should fit the data the best
 
 #starting values, parameters(?), additional arguments
 
 #outputs:
 ##value: Fehler
+
+
+
+#if this doesn't work: check if everything is correct. then put new starting points.
 ```
