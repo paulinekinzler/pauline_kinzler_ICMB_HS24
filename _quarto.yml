@@ -23,6 +23,8 @@ website:
       - index.qmd
       - hw1/index.qmd
       - hw2/index.qmd
+      - Woche7/index.qmd
+      - Woche8/index.qmd
 
 format:
   html:
