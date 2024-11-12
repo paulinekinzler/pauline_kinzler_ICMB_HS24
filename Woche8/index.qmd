@@ -65,4 +65,5 @@ for (step in 1:length(sim_data)) {
 }
 
 hist(my_means)
+
 ```
