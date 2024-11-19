@@ -1,0 +1,47 @@
+---
+title: "Woche 9"
+author: "Pauline Kinzler"
+---
+
+```{r}
+x <- list(1,2,3,4)
+x[[2]]
+gen_data <- function(n, mean, sd) {
+  x <- rnorm(n = n, mean = mean, sd = sd)
+  return(x)
+}
+
+results <- gen_data(100, 0, 1)
+hist(results)
+
+gen_data(100, 0, 1) |>hist()
+
+gen_data(100, 0, 1) |>
+  round(digits = 1) |>
+  print()
+
+print(x)
+
+means_list <- seq(1, 10, 1)
+means_list
+
+datasets <- list()
+for (i in 1:10) {
+  datasets[[i]] <- gen_data(n=10, mean = means_list[i], sd = 3)
+}
+
+str(datasets)
+
+hist(datasets[[1]])
+hist(datasets[[2]])
+
+
+lapply(means_list, function(mean) gen_data(n = 10, mean = mean, sd = 3))
+
+sim_data <- gen_data(1000, 100, 50)
+hist(sim_data)
+
+hist(sim_data, freq = F)
+x <- seq(50, 150, 0.01)
+lines(x, dnorm(x, 80, 15))
+```
